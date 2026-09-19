@@ -132,10 +132,29 @@ No test runner. CI runs typecheck and `wrangler deploy --dry-run` only.
 
 If this repo uses the `mattpocock/skills` set (`grill-with-docs`, `to-spec`, `to-tickets`, `implement`, `code-review`, etc. — see `AGENT.md`'s Flow section), run this once the repo has a real git remote, before using any of those skills for real.
 
-Install the skills first:
+Install the skills this project actually uses — one `--skill` per command, run from the repo root:
 
 ```bash
-npx skills@latest add mattpocock/skills
+npx skills@latest add mattpocock/skills --skill=setup-matt-pocock-skills
+npx skills@latest add mattpocock/skills --skill=ask-matt
+npx skills@latest add mattpocock/skills --skill=grill-with-docs
+npx skills@latest add mattpocock/skills --skill=to-spec
+npx skills@latest add mattpocock/skills --skill=to-tickets
+npx skills@latest add mattpocock/skills --skill=implement
+npx skills@latest add mattpocock/skills --skill=code-review
+npx skills@latest add mattpocock/skills --skill=tdd
+npx skills@latest add mattpocock/skills --skill=codebase-design
+npx skills@latest add mattpocock/skills --skill=grilling
+npx skills@latest add mattpocock/skills --skill=domain-modeling
+```
+
+`codebase-design`, `grilling`, and `domain-modeling` are not optional extras — `tdd` depends on `codebase-design` directly, and `grill-with-docs` is a one-line delegation to `grilling` + `domain-modeling`. Skipping any of the three leaves the skill that depends on it non-functional.
+
+Add later, only if the need actually comes up (not part of this project's default flow):
+
+```bash
+npx skills@latest add mattpocock/skills --skill=handoff   # a session runs out of context mid-task
+npx skills@latest add mattpocock/skills --skill=triage    # issues arrive faster than they can be scoped by hand
 ```
 
 Then run the setup skill:
