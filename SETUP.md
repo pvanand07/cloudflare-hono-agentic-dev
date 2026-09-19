@@ -128,7 +128,32 @@ Add `docs/domain.md`, `docs/architecture.md`, `docs/adr/`, `docs/agents/issue-tr
 
 No test runner. CI runs typecheck and `wrangler deploy --dry-run` only.
 
-## 13. Clean up before committing
+## 13. Set up Matt Pocock's skills (optional, once per repo)
+
+If this repo uses the `mattpocock/skills` set (`grill-with-docs`, `to-spec`, `to-tickets`, `implement`, `code-review`, etc. — see `AGENT.md`'s Flow section), run this once the repo has a real git remote, before using any of those skills for real.
+
+Install the skills first:
+
+```bash
+npx skills@latest add mattpocock/skills
+```
+
+Then run the setup skill:
+
+```
+/setup-matt-pocock-skills
+```
+
+It's non-invokable — the agent never reaches for it on its own, someone has to type the command. It reads `git remote`, proposes GitHub as the issue tracker, and writes `docs/agents/issue-tracker.md` and `docs/agents/domain.md`, replacing the stubs from step 12. It also appends an `## Agent skills` block to `CLAUDE.md`.
+
+Two things it does **not** do:
+
+- `docs/agents/triage-labels.md` is only written if the `triage` skill is installed. This template's `AGENT.md` flow doesn't use `triage` — skip expecting this file unless `triage` gets added later.
+- It maps label *names* to roles, it doesn't create them. On a fresh GitHub repo, `ready-for-agent`, `needs-info`, `ready-for-human`, `wontfix` still need to be created by hand (`gh label create ...`) the first time.
+
+Re-run it only to switch trackers or start over — not on every session.
+
+## 14. Clean up before committing
 
 ```bash
 rm -rf node_modules dist package-lock.json .wrangler
