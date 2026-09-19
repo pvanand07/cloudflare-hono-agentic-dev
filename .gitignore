@@ -15,6 +15,10 @@ dist/
 node_modules/
 .wrangler
 
+# mattpocock/skills — restore with: npx skills experimental_install
+.agents/skills/
+.claude/skills/
+
 # env
 .env
 .env.production

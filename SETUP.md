@@ -132,29 +132,32 @@ No test runner. CI runs typecheck and `wrangler deploy --dry-run` only.
 
 If this repo uses the `mattpocock/skills` set (`grill-with-docs`, `to-spec`, `to-tickets`, `implement`, `code-review`, etc. — see `AGENT.md`'s Flow section), run this once the repo has a real git remote, before using any of those skills for real.
 
-Install the skills this project actually uses — one `--skill` per command, run from the repo root:
+Install the skills this project actually uses, in one command, run from the repo root. `--skill` (`-s`) takes a space-separated list — it does not accept `--skill=<name>` repeated per invocation; each of those installs the entire 38-skill package instead of just the named one, so don't split this into one command per skill. No `-g`: omitting it installs to the project (`.agents/skills/`), not globally.
 
 ```bash
-npx skills@latest add mattpocock/skills --skill=setup-matt-pocock-skills
-npx skills@latest add mattpocock/skills --skill=ask-matt
-npx skills@latest add mattpocock/skills --skill=grill-with-docs
-npx skills@latest add mattpocock/skills --skill=to-spec
-npx skills@latest add mattpocock/skills --skill=to-tickets
-npx skills@latest add mattpocock/skills --skill=implement
-npx skills@latest add mattpocock/skills --skill=code-review
-npx skills@latest add mattpocock/skills --skill=tdd
-npx skills@latest add mattpocock/skills --skill=codebase-design
-npx skills@latest add mattpocock/skills --skill=grilling
-npx skills@latest add mattpocock/skills --skill=domain-modeling
+npx skills@latest add mattpocock/skills --skill setup-matt-pocock-skills ask-matt grill-with-docs to-spec to-tickets implement code-review tdd codebase-design grilling domain-modeling -y
+```
+
+This writes skill content under `.agents/skills/` (symlinked into `.claude/skills/` etc. per agent) and a `skills-lock.json` manifest. `.agents/skills/` and `.claude/skills/` are gitignored — they're fetched content, not source — but `skills-lock.json` is committed. After a fresh clone, restore them with:
+
+```bash
+npx skills experimental_install
 ```
 
 `codebase-design`, `grilling`, and `domain-modeling` are not optional extras — `tdd` depends on `codebase-design` directly, and `grill-with-docs` is a one-line delegation to `grilling` + `domain-modeling`. Skipping any of the three leaves the skill that depends on it non-functional.
 
-Add later, only if the need actually comes up (not part of this project's default flow):
+If you ever land with the full 38-skill set installed (e.g. from running `add` without `--skill`, or from an older version of this doc), prune back to just the required set:
 
 ```bash
-npx skills@latest add mattpocock/skills --skill=handoff   # a session runs out of context mid-task
-npx skills@latest add mattpocock/skills --skill=triage    # issues arrive faster than they can be scoped by hand
+npx skills@latest remove --all -y
+npx skills@latest add mattpocock/skills --skill setup-matt-pocock-skills ask-matt grill-with-docs to-spec to-tickets implement code-review tdd codebase-design grilling domain-modeling -y
+```
+
+Add later, only if the need actually comes up (not part of this project's default flow) — same multi-name syntax:
+
+```bash
+npx skills@latest add mattpocock/skills --skill handoff   # a session runs out of context mid-task
+npx skills@latest add mattpocock/skills --skill triage    # issues arrive faster than they can be scoped by hand
 ```
 
 Then run the setup skill:
